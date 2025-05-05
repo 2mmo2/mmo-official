@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MMO — Your Request, Our Quest</title>
+
+  <!-- Core CSS & AOS -->
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- Intro.js (Interactive UI Assistant) -->
+  <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css" />
+
+  <style>
+    /* Parallax Background */
+    body::before {
+      content: "";
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: url('https://www.transparenttextures.com/patterns/cubes.png');
+      opacity: 0.05; z-index: -1;
+      animation: scrollBg 40s linear infinite;
+    }
+    @keyframes scrollBg {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 1000px; }
+    }
+
+    /* Core Styles */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Segoe UI',sans-serif; background:#0b0c10; color:#fff; }
+    .navbar { display:flex; justify-content:space-between; align-items:center;
+      background:#1f2833; padding:1rem 2rem; position:sticky; top:0; z-index:1000;
+    }
+    .logo { font-size:1.8rem; font-weight:bold; color:#66fcf1; }
+    nav a { margin-left:1rem; text-decoration:none; color:#c5c6c7; transition:color .3s; }
+    nav a:hover { color:#66fcf1; }
+
+    .section { padding:4rem 2rem; max-width:900px; margin:auto; text-align:center; }
+    .section.light { background:#1f2833; border-radius:12px; }
+    h2 { color:#66fcf1; font-size:2.2rem; margin-bottom:1rem; }
+    p, li { font-size:1.1rem; color:#c5c6c7; }
+
+    .services-list { list-style:none; margin-top:1rem; }
+    .services-list li { margin:.5rem 0; }
+
+    form { display:grid; gap:1rem; max-width:500px; margin:auto; }
+    input, textarea { padding:.75rem; border:none; border-radius:8px; font-size:1rem; }
+    button { background:#66fcf1; border:none; color:#0b0c10; padding:.75rem;
+      font-weight:bold; border-radius:8px; cursor:pointer; transition:background .3s;
+    }
+    button:hover { background:#45a29e; }
+
+    footer { text-align:center; padding:2rem; background:#1f2833; color:#c5c6c7; }
+
+    /* Animated Titles */
+    @keyframes pulseGlow {
+      0%,100% { text-shadow:0 0 10px #66fcf1,0 0 20px #45a29e; }
+      50%    { text-shadow:0 0 5px #66fcf1,0 0 10px #45a29e; }
+    }
+    .hero-content h1 { font-size:4rem; color:#66fcf1; animation:pulseGlow 3s ease-in-out infinite; }
+
+    /* Team Cards */
+    .team-card { background:#1f2833; padding:1rem 2rem; border-radius:12px; width:200px;
+      transition:transform .3s, box-shadow .3s;
+    }
+    .team-card:hover { transform:scale(1.05); box-shadow:0 0 15px rgba(102,252,241,0.3); }
+
+    /* SVG Wave */
+    .svg-wave { width:100%; height:100px; overflow:hidden; line-height:0; }
+    .svg-wave svg { display:block; width:100%; height:100px; }
+
+    /* Chatbot (Floating) */
+    #chat-toggle-btn { position:fixed; bottom:20px; right:20px;
+      background:#66fcf1; border:none; border-radius:50%;
+      width:60px; height:60px; font-size:2rem; color:#0b0c10;
+      cursor:pointer; z-index:1001;
+    }
+    #chat-window { position:fixed; bottom:90px; right:20px;
+      width:300px; max-height:400px; background:#1f2833;
+      border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.5);
+      display:none; flex-direction:column; overflow:hidden; z-index:1001;
+    }
+    #chat-body { flex:1; padding:1rem; overflow-y:auto; }
+    #chat-input { display:flex; border-top:1px solid #333; }
+    #chat-input input { flex:1; padding:.5rem; border:none; border-radius:0; }
+    #chat-input button { padding:.5rem 1rem; border:none; background:#45a29e; color:#fff; }
+
+    /* Help Tour Button */
+    #help-btn { position:fixed; top:20px; right:20px;
+      background:#66fcf1; border:none; border-radius:4px;
+      padding:.5rem 1rem; cursor:pointer; color:#0b0c10; z-index:1001;
+    }
+
+    /* Auth Modal Styles */
+    #auth-modal { position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:1002;
+    }
+    #auth-modal .modal-content { background:#1f2833; padding:2rem; border-radius:8px; width:320px; }
+    #auth-modal input { width:100%; padding:.5rem; margin-bottom:.5rem; border:none; border-radius:4px; }
+    #auth-modal button { width:100%; padding:.75rem; border:none; border-radius:4px;
+      background:#66fcf1; color:#0b0c10; font-weight:bold; cursor:pointer;
+    }
+    #auth-nav { display:flex; align-items:center; }
+    #auth-nav a { margin-left:1rem; color:#c5c6c7; text-decoration:none; }
+    #logout-btn { cursor:pointer; color:#66fcf1; margin-left:1rem; }
+
+    /* Code Embed */
+    pre { text-align:left; background:#0f161f; padding:1rem; border-radius:8px; overflow-x:auto; }
+    code { color:#c5c6c7; font-family:monospace; font-size:.9rem; }
+
+    h1{
+      text-align: center;
+    }
+
+    p{
+text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar" data-intro="This is your main navigation.">
+    <div class="logo">MMO</div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#team">Team</a>
+    </nav>
+    <div id="auth-nav">
+      <a href="#" id="login-link">Login</a>
+      <a href="#" id="signup-link">join</a>
+    </div>
+  </header>
+
+  <!-- Help Tour Trigger -->
+
+
+  <!-- Hero -->
+  <section class="hero" data-aos="fade-in" data-intro="Welcome banner">
+    <div class="hero-content">
+      <h1>MMO</h1>
+      <p class="tagline">Your Request, Our Quest</p>
+    </div>
+  </section>
+  <BR><BR></BR></BR>
+
+  <!-- About -->
+  <section id="about" class="section" data-aos="fade-up" data-intro="Learn about us">
+    <h2>About MMO</h2>
+    <p>We are a creative tech company building websites, games, animations, and custom domains. Every request is a new quest.</p>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="section light" data-aos="fade-right">
+    <h2>Our Services</h2>
+    <ul class="services-list">
+      <li>🌐 Web Development</li>
+      <li>🎮 Game Design</li>
+      <li>🎞️ Animation & Motion</li>
+      <li>🌍 Domain Setup & Hosting</li>
+    </ul>
+  </section>
+
+  <!-- Team -->
+  <section id="team" class="section" data-aos="fade-left">
+    <h2>Meet the Team</h2>
+    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:2rem;margin-top:2rem;">
+      <div class="team-card" data-aos="flip-left"><h3>@ulty</h3><p>Game Designer & Coder</p></div>
+      <div class="team-card" data-aos="zoom-in-up"><h3>@life_5</h3><p>Business Leader</p></div>
+      <div class="team-card" data-aos="fade-down-right"><h3>@D0D0</h3><p>Sales & Marketing</p></div>
+    </div>
+  </section>
+
+  <!-- Why MMO -->
+  <section id="why-mmo" class="section light" data-aos="zoom-in">
+    <h2>Why Choose MMO?</h2>
+    <ul class="services-list">
+      <li>🚀 Fast and responsive team</li>
+      <li>🎨 Custom creative solutions</li>
+      <li>🔒 Secure and reliable hosting</li>
+      <li>📱 Mobile-first development</li>
+    </ul>
+  </section>
+
+  <!-- Process -->
+  <section id="process" class="section" data-aos="fade-up">
+    <h2>Our Process</h2>
+    <ul class="services-list">
+      <li>📝 Understand Your Vision</li>
+      <li>🧠 Design the Concept</li>
+      <li>🛠 Develop & Animate</li>
+      <li>🚀 Deliver & Improve</li>
+    </ul>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="section light" data-aos="fade-up">
+    <h2>What Clients Say</h2>
+    <p>"MMO brought our dream project to life. The animations, design, and team spirit were unmatched!"</p>
+    <p>— Happy Client</p>
+  </section>
+
+  <!-- AI‑Powered Content Assistant -->
+  <section id="content-assistant" class="section" data-aos="fade-up">
+    <h2>AI Content Assistant</h2>
+    <textarea id="ca-prompt" rows="4" placeholder="Enter a prompt…"></textarea>
+    <button id="ca-generate">Generate</button>
+    <div id="ca-result" style="margin-top:1rem; text-align:left;"></div>
+  </section>
+
+  <!-- Database Setup Script -->
+  <section id="db-setup" class="section light" data-aos="fade-up">
+    <h2>Database Setup Script</h2>
+    <p>Use this Python script to create and populate your bot database:</p>
+
+<h3>-ulty</h3>
+    <pre><code>
+import sqlite3
+
+db_path = '/mnt/data/mmo_bot.db'
+conn = sqlite3.connect(db_path)
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS faqs (
+    id INTEGER PRIMARY KEY,
+    question TEXT,
+    answer TEXT
+);
+""")
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS services (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    description TEXT
+);
+""")
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS team (
+    id INTEGER PRIMARY KEY,
+    username TEXT,
+    role TEXT,
+    bio TEXT
+);
+""")
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS testimonials (
+    id INTEGER PRIMARY KEY,
+    client_name TEXT,
+    feedback TEXT
+);
+""")
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS content_templates (
+    id INTEGER PRIMARY KEY,
+    template_name TEXT,
+    prompt_template TEXT
+);
+""")
+
+for i in range(1, 51):
+    cursor.execute(
+        "INSERT INTO faqs (question, answer) VALUES (?, ?)",
+        (f"What is FAQ question #{i}?", f"This is the answer for FAQ #{i}.")
+    )
+# ...populate services, team, testimonials, templates similarly...
+
+conn.commit()
+conn.close()
+    </code></pre>
+  </section>
+
+  <!-- Join Our Team -->
+  <section id="join" class="section light" data-aos="fade-up">
+    <h2>Join Our Team</h2>
+    <p>Think you've got what it takes to build the future? We're always looking for creative coders, designers, and dreamers.</p>
+    <form>
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea placeholder="Tell us why you're a great fit..." required></textarea>
+      <button type="submit">Apply Now</button>
+    </form>
+  </section>
+
+  <!-- SVG Wave -->
+  <div class="svg-wave">
+    <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+      <path d="M0,49.98 C150,150 350,-50 500,49.98 L500,150 L0,150 Z" style="fill:#1f2833;"></path>
+    </svg>
+  </div>
+
+  <!-- Contact -->
+  <section id="contact" class="section light" data-aos="fade-up">
+    <h2>Contact MMO</h2>
+    <form>
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea placeholder="Tell us your quest..." required></textarea>
+      <button type="submit">Start a Project</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 MMO — All rights reserved.</p>
+  </footer>
+
+  <!-- Chatbot -->
+  <button id="chat-toggle-btn" title="Chat with us">💬</button>
+  <div id="chat-window">
+    <div id="chat-body"></div>
+    <div id="chat-input">
+      <input type="text" id="chat-message" placeholder="Type a message…" />
+      <button id="chat-send">Send</button>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal">
+    <div class="modal-content">
+      <h2 id="modal-title">Login</h2>
+
+      <form id="login-form">
+        <input type="text" id="login-username" placeholder="Username" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+        <button type="submit">Login</button>
+        <p style="text-align:center; margin-top:1rem;">
+          Don't have an account? <a href="#" id="to-signup">Sign Up</a>
+        </p>
+      </form>
+
+      <form id="signup-form" style="display:none;">
+        <input type="text" id="signup-username" placeholder="Username" required />
+        <input type="password" id="signup-password" placeholder="Password" required />
+        <input type="password" id="signup-confirm" placeholder="Confirm Password" required />
+        <button type="submit">Sign Up</button>
+        <p style="text-align:center; margin-top:1rem;">
+          Already have an account? <a href="#" id="to-login">Login</a>
+        </p>
+      </form>
+
+      <button id="close-modal" style="margin-top:1rem; background:#45a29e; color:#fff;">Close</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+  <script>
+    AOS.init();
+
+    // Chatbot
+    const chatBtn = document.getElementById('chat-toggle-btn');
+    const chatWin = document.getElementById('chat-window');
+    const chatBody = document.getElementById('chat-body');
+    chatBtn.onclick = () => chatWin.style.display = chatWin.style.display === 'flex' ? 'none' : 'flex';
+    document.getElementById('chat-send').onclick = async () => {
+      const inp = document.getElementById('chat-message'), text = inp.value.trim();
+      if (!text) return;
+      const ue = document.createElement('div'); ue.textContent = 'You: ' + text; ue.style.color='#66fcf1';
+      chatBody.appendChild(ue); inp.value='';
+      const res = await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
+      const { reply } = await res.json();
+      const be = document.createElement('div'); be.textContent='Bot: '+reply;
+      chatBody.appendChild(be); chatBody.scrollTop=chatBody.scrollHeight;
+    };
+
+    // AI Content Assistant
+    document.getElementById('ca-generate').onclick = async () => {
+      const prompt = document.getElementById('ca-prompt').value.trim();
+      if (!prompt) return alert('Please enter a prompt.');
+      document.getElementById('ca-result').textContent = 'Generating…';
+      const res = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+      const { text } = await res.json();
+      document.getElementById('ca-result').textContent = text;
+    };
+
+    // Auth Logic
+    const loginLink = document.getElementById('login-link'),
+          signupLink = document.getElementById('signup-link'),
+          authModal = document.getElementById('auth-modal'),
+          closeModal = document.getElementById('close-modal'),
+          loginForm = document.getElementById('login-form'),
+          signupForm = document.getElementById('signup-form'),
+          toSignup = document.getElementById('to-signup'),
+          toLogin = document.getElementById('to-login'),
+          welcomeMsg = document.getElementById('welcome-msg'),
+          userNameEl = document.getElementById('user-name'),
+          logoutBtn = document.getElementById('logout-btn');
+
+    function openModal(mode) {
+      authModal.style.display='flex';
+      document.getElementById('modal-title').textContent = mode==='login'?'Login':'Sign Up';
+      loginForm.style.display = mode==='login'?'block':'none';
+      signupForm.style.display = mode==='signup'?'block':'none';
+    }
+    loginLink.onclick = e=>{ e.preventDefault(); openModal('login'); };
+    signupLink.onclick = e=>{ e.preventDefault(); openModal('signup'); };
+    closeModal.onclick = ()=>authModal.style.display='none';
+    toSignup.onclick = e=>{ e.preventDefault(); openModal('signup'); };
+    toLogin.onclick = e=>{ e.preventDefault(); openModal('login'); };
+
+    function getUsers(){ return JSON.parse(localStorage.getItem('mmo_users')||'{}'); }
+    function setUsers(u){ localStorage.setItem('mmo_users', JSON.stringify(u)); }
+
+    signupForm.onsubmit = e=>{
+      e.preventDefault();
+      const u=document.getElementById('signup-username').value.trim(),
+            p=document.getElementById('signup-password').value,
+            c=document.getElementById('signup-confirm').value;
+      if(p!==c){ alert('Passwords do not match'); return; }
+      const users=getUsers();
+      if(users[u]){ alert('Username exists'); return; }
+      users[u]=p; setUsers(users);
+      alert('Account created! Please login.'); openModal('login');
+    };
+
+    loginForm.onsubmit = e=>{
+      e.preventDefault();
+      const u=document.getElementById('login-username').value.trim(),
+            p=document.getElementById('login-password').value,
+            users=getUsers();
+      if(users[u]===p){
+        localStorage.setItem('mmo_currentUser',u);
+        updateUI(); authModal.style.display='none';
+      } else alert('Invalid credentials');
+    };
+
+    logoutBtn.onclick = ()=>{
+      localStorage.removeItem('mmo_currentUser');
+      updateUI();
+    };
+
+    function updateUI(){
+      const cu=localStorage.getItem('mmo_currentUser');
+      if(cu){
+        welcomeMsg.style.display='inline';
+        userNameEl.textContent=cu;
+        loginLink.style.display='none';
+        signupLink.style.display='none';
+      } else {
+        welcomeMsg.style.display='none';
+        loginLink.style.display='inline';
+        signupLink.style.display='inline';
+      }
+    }
+
+    window.onload = ()=>{
+      AOS.init();
+      updateUI();
+    };
+  </script>
+</body>
+</html>
