@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:description" content="an innovative company's website">
+    <meta property="og:title" content="MMO — Your Request, Our Quest">
+    <meta property="og:image" content="https://plus.unsplash.com/premium_photo-1672423154405-5fd922c11af2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNvcnBvcmF0ZXxlbnwwfHwwfHx8MA%3D%3D">
   <title>MMO — Your Request, Our Quest</title>
 
   <!-- Core CSS & AOS -->
@@ -118,6 +122,30 @@
     p{
 text-align: center;
     }
+
+    body.light-mode {
+    background-color: #ffffff;
+    color: #111111;
+  }
+
+  body.dark-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+  }
+
+  body.dark-mode nav,
+  body.dark-mode footer {
+    background-color: #1e1e1e;
+    color: #ffffff;
+  }
+
+  #theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-right: 10px;
+  }
   </style>
 </head>
 <body>
@@ -133,6 +161,11 @@ text-align: center;
     <div id="auth-nav">
       <a href="#" id="login-link">Login</a>
       <a href="#" id="signup-link">join</a>
+      <div class="auth-links" id="auth-nav">
+         ....
+        <button id="theme-toggle">🌙</button>
+        </div>
+
     </div>
   </header>
 
@@ -453,6 +486,73 @@ conn.close()
       AOS.init();
       updateUI();
     };
+
+    function updateUI(){
+      const cu = localStorage.getItem('mmo_currentUser');
+      if (cu) {
+        // If logged in
+        if (!document.getElementById('welcome-msg')) {
+          const welcome = document.createElement('div');
+          welcome.id = 'welcome-msg';
+          welcome.innerHTML = `Welcome, <span id="user-name">${cu}</span>! <span id="logout-btn">[Logout]</span>`;
+          document.getElementById('auth-nav').appendChild(welcome);
+        } else {
+          document.getElementById('user-name').textContent = cu;
+        }
+        loginLink.style.display = 'none';
+        signupLink.style.display = 'none';
+      } else {
+        // If logged out
+        const welcome = document.getElementById('welcome-msg');
+        if (welcome) welcome.remove();
+        loginLink.style.display = 'inline';
+        signupLink.style.display = 'inline';
+      }
+    }
+
+    updateUI();
+
+    const toggleBtn = document.getElementById('theme-toggle');
+  const userPref = localStorage.getItem('mmo_theme') || 'light';
+
+  document.body.classList.add(userPref + '-mode');
+  toggleBtn.textContent = userPref === 'dark' ? '☀️' : '🌙';
+
+  toggleBtn.addEventListener('click', () => {
+    const isDark = document.body.classList.contains('dark-mode');
+    document.body.classList.toggle('dark-mode', !isDark);
+    document.body.classList.toggle('light-mode', isDark);
+    toggleBtn.textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('mmo_theme', isDark ? 'light' : 'dark');
+  });
+
+  // Simulate login persistence
+document.addEventListener("DOMContentLoaded", () => {
+  const isLoggedIn = localStorage.getItem("mmo_logged_in");
+
+  if (isLoggedIn === "true") {
+    document.getElementById("auth-nav").innerHTML = `
+      <a href="#">Welcome Back</a>
+      <a href="#" id="logout">Logout</a>
+    `;
+    document.getElementById("logout").addEventListener("click", () => {
+      localStorage.removeItem("mmo_logged_in");
+      location.reload();
+    });
+  } else {
+    document.getElementById("auth-nav").innerHTML = `
+      <a href="#" onclick="login()">Login</a>
+      <a href="#">Register</a>
+    `;
+  }
+});
+
+function login() {
+  localStorage.setItem("mmo_logged_in", "true");
+  location.reload();
+}
+
+  </script>
   </script>
 </body>
 </html>
